@@ -3,7 +3,7 @@ const color = require('color');
 
 module = module ?? {};
 
-const BgATPlugin = plugin(({theme, matchUtilities, addUtilities}) => {
+const BgATPlugin = plugin(({theme, matchUtilities}) => {
     function flattenColors(colors) {
         return Object.fromEntries(Object.entries(colors).map(pair => {
             return typeof pair[1] === 'string' ? [pair] :
@@ -19,6 +19,8 @@ const BgATPlugin = plugin(({theme, matchUtilities, addUtilities}) => {
         }))
     }
 
+    let options = {values: flattenColors(theme('colors')), type: 'color'};
+
     matchUtilities({
         'bgat': (value) => {
             let bg = color(value);
@@ -32,7 +34,10 @@ const BgATPlugin = plugin(({theme, matchUtilities, addUtilities}) => {
                 backgroundColor,
                 color: fg
             };
-        },
+        }
+    }, options);
+
+    matchUtilities({
         'cauto': (value) => {
             let bg = color(value);
             let text = bg.isDark() ?
@@ -45,7 +50,7 @@ const BgATPlugin = plugin(({theme, matchUtilities, addUtilities}) => {
                 '--tw-cauto-negate': negate,
             }
         }
-    }, {values: flattenColors(theme('colors')), type: 'color'});
+    }, options)
 });
 
 module.exports = BgATPlugin;
